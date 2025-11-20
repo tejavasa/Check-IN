@@ -20,13 +20,57 @@ export class AttendanceService {
 
   constructor(private http: HttpClient) {}
 
-  // Mock center configuration - In production, this would come from API
+  // ==================== CENTER CONFIGURATION EXAMPLES ====================
+  // Choose ONE of the example configurations below based on your center's needs
+  // In production, this would come from your API backend
+
+  // EXAMPLE 1: QR Code Only Center (No RFID)
+  // Uncomment this configuration to use QR code scanning only
+  // private mockCenterConfig: CenterConfiguration = {
+  //   centerId: 'CENTER001',
+  //   centerName: 'QR Code Center',
+  //   primaryCheckInMethod: 'qr',      // QR code scanning only
+  //   allowManualEntry: false,          // No manual entry - QR only
+  //   requireLevelSelection: true       // Students select beginner/explore
+  // };
+
+  // EXAMPLE 2: QR Code + Manual Entry Center
+  // Uncomment this configuration to allow QR scanning with manual fallback
+  // private mockCenterConfig: CenterConfiguration = {
+  //   centerId: 'CENTER002',
+  //   centerName: 'QR + Manual Center',
+  //   primaryCheckInMethod: 'qr',      // QR code as primary method
+  //   allowManualEntry: true,           // Allow manual ID entry as backup
+  //   requireLevelSelection: true       // Students select beginner/explore
+  // };
+
+  // EXAMPLE 3: RFID Only Center (No QR Code)
+  // Uncomment this configuration to use RFID card scanning only
+  // private mockCenterConfig: CenterConfiguration = {
+  //   centerId: 'CENTER003',
+  //   centerName: 'RFID Card Center',
+  //   primaryCheckInMethod: 'rfid',    // RFID card scanning only
+  //   allowManualEntry: false,          // No manual entry - RFID only
+  //   requireLevelSelection: true       // Students select beginner/explore
+  // };
+
+  // EXAMPLE 4: RFID + Manual Entry Center
+  // Uncomment this configuration to allow RFID with manual fallback
+  // private mockCenterConfig: CenterConfiguration = {
+  //   centerId: 'CENTER004',
+  //   centerName: 'RFID + Manual Center',
+  //   primaryCheckInMethod: 'rfid',    // RFID as primary method
+  //   allowManualEntry: true,           // Allow manual ID entry as backup
+  //   requireLevelSelection: false      // Skip level selection, go straight to check-in
+  // };
+
+  // ACTIVE CONFIGURATION (Currently Using Example 2: QR + Manual)
   private mockCenterConfig: CenterConfiguration = {
-    centerId: 'CENTER001',
-    centerName: 'Main Learning Center',
-    primaryCheckInMethod: 'qr', // Change to 'rfid' to test RFID mode
-    allowManualEntry: true,
-    requireLevelSelection: true
+    centerId: 'CENTER002',
+    centerName: 'QR + Manual Center',
+    primaryCheckInMethod: 'qr',        // QR code as primary method
+    allowManualEntry: true,             // Allow manual ID entry as backup
+    requireLevelSelection: true         // Students select beginner/explore
   };
 
   // Mock data for demo
