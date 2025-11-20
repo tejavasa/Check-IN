@@ -7,7 +7,9 @@ import {
   ApiResponse,
   MyStudioDataResponse,
   ClassAppointmentInfo,
-  ActiveMemberships
+  ActiveMemberships,
+  CenterConfiguration,
+  CheckInMethodConfig
 } from '../models/attendance.models';
 
 @Injectable({
@@ -17,6 +19,15 @@ export class AttendanceService {
   private apiUrl = 'https://localhost:5001/api'; // Update with your API URL
 
   constructor(private http: HttpClient) {}
+
+  // Mock center configuration - In production, this would come from API
+  private mockCenterConfig: CenterConfiguration = {
+    centerId: 'CENTER001',
+    centerName: 'Main Learning Center',
+    primaryCheckInMethod: 'qr', // Change to 'rfid' to test RFID mode
+    allowManualEntry: true,
+    requireLevelSelection: true
+  };
 
   // Mock data for demo
   private mockClasses: ClassAppointmentInfo[] = [
@@ -134,5 +145,46 @@ export class AttendanceService {
       `${this.apiUrl}/attendance/checkout`,
       request
     );
+  }
+
+  getCenterConfiguration(centerId: string): Observable<CenterConfiguration> {
+    // For demo, return mock configuration
+    return of(this.mockCenterConfig).pipe(delay(300));
+
+    // For production, uncomment:
+    // return this.http.get<CenterConfiguration>(`${this.apiUrl}/centers/${centerId}/configuration`);
+  }
+
+  getAvailableCheckInMethods(config: CenterConfiguration): CheckInMethodConfig[] {
+    const methods: CheckInMethodConfig[] = [];
+
+    // Add the primary method (QR or RFID - mutually exclusive)
+    if (config.primaryCheckInMethod === 'qr') {
+      methods.push({
+        type: 'qr',
+        enabled: true,
+        label: 'QR Code',
+        description: 'Scan with camera'
+      });
+    } else if (config.primaryCheckInMethod === 'rfid') {
+      methods.push({
+        type: 'rfid',
+        enabled: true,
+        label: 'RFID',
+        description: 'Tap your RFID card'
+      });
+    }
+
+    // Optionally add manual entry
+    if (config.allowManualEntry) {
+      methods.push({
+        type: 'manual',
+        enabled: true,
+        label: 'Manual Check-In',
+        description: 'Enter student ID'
+      });
+    }
+
+    return methods;
   }
 }

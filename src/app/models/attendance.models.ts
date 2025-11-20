@@ -54,3 +54,20 @@ export interface ActiveMemberships {
   membership_title: string;
   membership_category_title: string;
 }
+
+export type CheckInMethodType = 'qr' | 'rfid' | 'manual';
+
+export interface CenterConfiguration {
+  centerId: string;
+  centerName: string;
+  primaryCheckInMethod: 'qr' | 'rfid'; // Must choose one - cannot be both
+  allowManualEntry: boolean;
+  requireLevelSelection: boolean;
+}
+
+export interface CheckInMethodConfig {
+  type: CheckInMethodType;
+  enabled: boolean;
+  label: string;
+  description: string;
+}

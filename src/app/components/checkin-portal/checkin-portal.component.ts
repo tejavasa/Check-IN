@@ -2,7 +2,9 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { AttendanceService } from '../../services/attendance.service';
 import {
   ClassAppointmentInfo,
-  AttendanceRequestModel
+  AttendanceRequestModel,
+  CenterConfiguration,
+  CheckInMethodConfig
 } from '../../models/attendance.models';
 
 @Component({
@@ -29,10 +31,32 @@ export class CheckinPortalComponent implements OnInit, OnDestroy {
   stream: MediaStream | null = null;
   checkInTime: Date | null = null;
   rfidData: string = '';
+  centerConfig: CenterConfiguration | null = null;
+  availableMethods: CheckInMethodConfig[] = [];
 
   constructor(private attendanceService: AttendanceService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadCenterConfiguration();
+  }
+
+  loadCenterConfiguration(): void {
+    this.attendanceService.getCenterConfiguration('CENTER001').subscribe({
+      next: (config) => {
+        this.centerConfig = config;
+        this.availableMethods = this.attendanceService.getAvailableCheckInMethods(config);
+
+        // If level selection is not required, skip to check-in method
+        if (!config.requireLevelSelection) {
+          this.selectedLevel = 'beginner'; // Set a default
+        }
+      },
+      error: (err) => {
+        console.error('Error loading center configuration:', err);
+        this.error = 'Failed to load center configuration';
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this.stopCamera();
@@ -40,7 +64,12 @@ export class CheckinPortalComponent implements OnInit, OnDestroy {
 
   handleLogin(): void {
     if (this.name.trim()) {
-      this.view = 'selection';
+      if (this.centerConfig?.requireLevelSelection) {
+        this.view = 'selection';
+      } else {
+        this.selectedLevel = 'beginner'; // Set default
+        this.view = 'checkin-method';
+      }
       this.error = '';
     }
   }
@@ -241,6 +270,11 @@ export class CheckinPortalComponent implements OnInit, OnDestroy {
     this.error = '';
     this.checkInTime = null;
     this.rfidData = '';
+    this.loadCenterConfiguration(); // Reload config on reset
+  }
+
+  isMethodAvailable(methodType: 'qr' | 'rfid' | 'manual'): boolean {
+    return this.availableMethods.some(m => m.type === methodType && m.enabled);
   }
 
   backToSelection(): void {
