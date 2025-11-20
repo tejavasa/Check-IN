@@ -1,0 +1,396 @@
+<div class="min-h-screen bg-gradient flex-center p-4">
+  <div class="container">
+
+    <!-- LOGIN VIEW -->
+    <div *ngIf="view === 'login'" class="card fade-in">
+      <div class="card-header">
+        <div class="icon-circle bg-gradient">
+          <svg class="icon-white" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <h1 class="title">Welcome Back!</h1>
+        <p class="subtitle">Please enter your details to check in</p>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Your Name</label>
+        <input
+          type="text"
+          [(ngModel)]="name"
+          (keyup.enter)="handleLogin()"
+          class="input"
+          placeholder="Enter your name"
+          autofocus
+        />
+      </div>
+
+      <button
+        (click)="handleLogin()"
+        [disabled]="!name.trim()"
+        class="btn btn-primary btn-full"
+        [class.btn-disabled]="!name.trim()"
+      >
+        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+          <polyline points="10 17 15 12 10 7"></polyline>
+          <line x1="15" y1="12" x2="3" y2="12"></line>
+        </svg>
+        Continue
+      </button>
+    </div>
+
+    <!-- LEVEL SELECTION VIEW -->
+    <div *ngIf="view === 'selection'" class="card fade-in">
+      <div class="card-header">
+        <h2 class="title">Hello, {{name}}! 👋</h2>
+        <p class="subtitle">Select your learning level</p>
+      </div>
+
+      <div class="button-group">
+        <button (click)="handleLevelSelect('beginner')" class="level-btn beginner-btn">
+          <div class="level-icon bg-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+          </div>
+          <div class="level-text">
+            <h3 class="level-title">Beginner</h3>
+            <p class="level-desc">Start your coding journey</p>
+          </div>
+        </button>
+
+        <button (click)="handleLevelSelect('explore')" class="level-btn explore-btn">
+          <div class="level-icon bg-blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 16v-4"></path>
+              <path d="M12 8h.01"></path>
+            </svg>
+          </div>
+          <div class="level-text">
+            <h3 class="level-title">Explore</h3>
+            <p class="level-desc">Discover new concepts</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- CHECK-IN METHOD SELECTION -->
+    <div *ngIf="view === 'checkin-method'" class="card fade-in">
+      <div class="card-header">
+        <h2 class="title">Choose Check-In Method</h2>
+        <p class="subtitle">Level: <strong>{{selectedLevel === 'beginner' ? 'Beginner' : 'Explore'}}</strong></p>
+      </div>
+
+      <div class="button-group">
+        <button (click)="handleMethodSelect('qr')" class="method-btn">
+          <div class="method-icon bg-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+              <path d="M7 7h.01"></path>
+              <path d="M17 7h.01"></path>
+              <path d="M7 17h.01"></path>
+              <path d="M17 17h.01"></path>
+              <path d="M12 12h.01"></path>
+            </svg>
+          </div>
+          <div class="method-text">
+            <h3 class="method-title">QR Code</h3>
+            <p class="method-desc">Scan with camera (Demo mode)</p>
+          </div>
+        </button>
+
+        <button (click)="handleMethodSelect('rfid')" class="method-btn">
+          <div class="method-icon bg-orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+              <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+          </div>
+          <div class="method-text">
+            <h3 class="method-title">RFID</h3>
+            <p class="method-desc">Tap your RFID card</p>
+          </div>
+        </button>
+
+        <button (click)="handleMethodSelect('manual')" class="method-btn">
+          <div class="method-icon bg-indigo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="M6 8h.001"></path>
+              <path d="M10 8h.001"></path>
+              <path d="M14 8h.001"></path>
+              <path d="M18 8h.001"></path>
+              <path d="M8 12h.001"></path>
+              <path d="M12 12h.001"></path>
+              <path d="M16 12h.001"></path>
+              <path d="M7 16h10"></path>
+            </svg>
+          </div>
+          <div class="method-text">
+            <h3 class="method-title">Manual Check-In</h3>
+            <p class="method-desc">Enter student ID</p>
+          </div>
+        </button>
+      </div>
+
+      <button (click)="backToSelection()" class="btn btn-secondary btn-full mt-6">
+        Back
+      </button>
+    </div>
+
+    <!-- QR SCANNER VIEW -->
+    <div *ngIf="view === 'qr-scanner'" class="card fade-in">
+      <div class="card-header">
+        <div class="icon-circle bg-purple">
+          <svg class="icon-white" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </div>
+        <h2 class="title">Scan QR Code</h2>
+        <p class="subtitle">Position QR code within the frame</p>
+      </div>
+
+      <div *ngIf="error" class="error-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>{{error}}</p>
+      </div>
+
+      <div class="camera-container">
+        <video #videoElement autoplay playsinline muted class="camera-video"></video>
+        <canvas #canvasElement class="hidden"></canvas>
+
+        <div *ngIf="!stream && !error" class="camera-loading">
+          <div class="spinner"></div>
+          <p class="loading-text">Starting camera...</p>
+        </div>
+
+        <div *ngIf="stream || error" class="qr-frame">
+          <div class="frame-corner top-left"></div>
+          <div class="frame-corner top-right"></div>
+          <div class="frame-corner bottom-left"></div>
+          <div class="frame-corner bottom-right"></div>
+        </div>
+      </div>
+
+      <div class="button-group mt-6">
+        <button (click)="captureQRCode()" class="btn btn-primary btn-full">
+          Capture & Process QR Code (Demo)
+        </button>
+
+        <button (click)="handleBack()" class="btn btn-secondary btn-full">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- RFID READER VIEW -->
+    <div *ngIf="view === 'rfid-reader'" class="card fade-in">
+      <div class="card-header">
+        <div class="icon-circle bg-orange pulse">
+          <svg class="icon-white" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        </div>
+        <h2 class="title">RFID Reader Active</h2>
+        <p class="subtitle">Tap your RFID card on the reader</p>
+      </div>
+
+      <div class="rfid-waiting">
+        <svg class="rfid-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+          <line x1="12" y1="20" x2="12.01" y2="20"></line>
+        </svg>
+        <p class="rfid-text">Waiting for RFID card...</p>
+        <p class="rfid-subtext">Place card near the reader</p>
+      </div>
+
+      <input
+        #rfidInput
+        type="text"
+        [(ngModel)]="rfidData"
+        class="sr-only"
+        autofocus
+      />
+
+      <div class="button-group mt-6">
+        <button (click)="simulateRFIDScan()" class="btn btn-danger btn-full">
+          Simulate RFID Scan (Demo)
+        </button>
+
+        <button (click)="handleBack()" class="btn btn-secondary btn-full">
+          Cancel
+        </button>
+      </div>
+
+      <p class="note">
+        Note: In production, RFID reader hardware will automatically detect cards
+      </p>
+    </div>
+
+    <!-- MANUAL ENTRY VIEW -->
+    <div *ngIf="view === 'manual-entry'" class="card fade-in">
+      <div class="card-header">
+        <div class="icon-circle bg-indigo">
+          <svg class="icon-white" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="M6 8h.001"></path>
+            <path d="M10 8h.001"></path>
+            <path d="M14 8h.001"></path>
+            <path d="M18 8h.001"></path>
+          </svg>
+        </div>
+        <h2 class="title">Manual Check-In</h2>
+        <p class="subtitle">Enter your student ID</p>
+      </div>
+
+      <div *ngIf="error" class="error-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>{{error}}</p>
+      </div>
+
+      <div class="form-group">
+        <label class="label">Student ID</label>
+        <input
+          type="text"
+          [(ngModel)]="studentId"
+          (keyup.enter)="handleManualCheckIn()"
+          class="input"
+          placeholder="e.g., STU12345"
+          autofocus
+        />
+      </div>
+
+      <button
+        (click)="handleManualCheckIn()"
+        [disabled]="!studentId.trim() || isLoading"
+        class="btn btn-primary btn-full"
+        [class.btn-disabled]="!studentId.trim() || isLoading"
+      >
+        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        {{isLoading ? 'Processing...' : 'Complete Check-In'}}
+      </button>
+
+      <button (click)="handleBack()" class="btn btn-secondary btn-full mt-3">
+        Back
+      </button>
+    </div>
+
+    <!-- CLASS SELECTION VIEW -->
+    <div *ngIf="view === 'class-selection'" class="card fade-in">
+      <div class="card-header">
+        <h2 class="title">Select Your Class</h2>
+        <p class="subtitle">Choose which class you're attending today</p>
+      </div>
+
+      <div class="class-list">
+        <button
+          *ngFor="let classInfo of availableClasses"
+          (click)="selectClass(classInfo)"
+          [disabled]="classInfo.checked_in"
+          class="class-card"
+          [class.class-disabled]="classInfo.checked_in"
+        >
+          <h3 class="class-title">{{classInfo.class_appointment_title}}</h3>
+          <p class="class-subtitle">{{classInfo.class_appointment_subtitle}}</p>
+          <p class="class-time">{{classInfo.start_time}} - {{classInfo.end_time}}</p>
+          <span *ngIf="classInfo.checked_in" class="checked-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            Already Checked In
+          </span>
+        </button>
+      </div>
+
+      <button (click)="handleBack()" class="btn btn-secondary btn-full mt-6">
+        Back
+      </button>
+    </div>
+
+    <!-- LOADING VIEW -->
+    <div *ngIf="isScanning" class="card fade-in text-center">
+      <div class="card-header">
+        <div class="icon-circle bg-gradient pulse mb-6">
+          <svg class="icon-white" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </div>
+        <h2 class="title">Processing Check-In...</h2>
+        <p class="subtitle">Verifying your credentials</p>
+      </div>
+      <div class="spinner-large"></div>
+    </div>
+
+    <!-- SUCCESS VIEW -->
+    <div *ngIf="view === 'success'" class="card fade-in text-center">
+      <div class="card-header">
+        <div class="success-circle mb-4 bounce">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h2 class="title-large">Successfully Checked In! 🎉</h2>
+        <p class="subtitle mb-4">Welcome, {{name}}!</p>
+        <div class="level-badge">
+          Level: {{selectedLevel === 'beginner' ? '🌟 Beginner' : '🔍 Explore'}}
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-row">
+          <span class="info-label">Method:</span>
+          <span class="info-value">
+            {{checkInMethod === 'qr' ? '📱 QR Code Scan' :
+              checkInMethod === 'rfid' ? '💳 RFID Card' :
+              '⌨️ Manual Entry'}}
+          </span>
+        </div>
+        <div *ngIf="studentId" class="info-row">
+          <span class="info-label">ID:</span>
+          <span class="info-value">{{studentId}}</span>
+        </div>
+        <div *ngIf="checkInTime" class="info-row">
+          <span class="info-label">Time:</span>
+          <span class="info-value">{{checkInTime | date:'short'}}</span>
+        </div>
+        <div *ngIf="selectedClass" class="info-row">
+          <span class="info-label">Class:</span>
+          <span class="info-value">{{selectedClass.class_appointment_title}}</span>
+        </div>
+      </div>
+
+      <button (click)="handleReset()" class="btn btn-secondary btn-full">
+        Check In Another Student
+      </button>
+    </div>
+
+  </div>
+</div>
